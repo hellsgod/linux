@@ -667,7 +667,6 @@ static int __init crc32c_test(void)
 	int errors = 0;
 	int bytes = 0;
 	u64 nsec;
-	unsigned long flags;
 
 	/* keep static to prevent cache warming code from
 	 * getting eliminated by the compiler */
@@ -681,9 +680,6 @@ static int __init crc32c_test(void)
 		    test[i].start, test[i].length);
 	}
 
-	/* reduce OS noise */
-	local_irq_save(flags);
-
 	nsec = ktime_get_ns();
 	for (i = 0; i < ARRAY_SIZE(test); i++) {
 		if (test[i].crc32c_le != __crc32c_le(test[i].crc, test_buf +
@@ -691,8 +687,6 @@ static int __init crc32c_test(void)
 			errors++;
 	}
 	nsec = ktime_get_ns() - nsec;
-
-	local_irq_restore(flags);
 
 	pr_info("crc32c: CRC_LE_BITS = %d\n", CRC_LE_BITS);
 
@@ -747,7 +741,6 @@ static int __init crc32_test(void)
 	int errors = 0;
 	int bytes = 0;
 	u64 nsec;
-	unsigned long flags;
 
 	/* keep static to prevent cache warming code from
 	 * getting eliminated by the compiler */
@@ -764,9 +757,6 @@ static int __init crc32_test(void)
 		    test[i].start, test[i].length);
 	}
 
-	/* reduce OS noise */
-	local_irq_save(flags);
-
 	nsec = ktime_get_ns();
 	for (i = 0; i < ARRAY_SIZE(test); i++) {
 		if (test[i].crc_le != crc32_le(test[i].crc, test_buf +
@@ -778,8 +768,6 @@ static int __init crc32_test(void)
 			errors++;
 	}
 	nsec = ktime_get_ns() - nsec;
-
-	local_irq_restore(flags);
 
 	pr_info("crc32: CRC_LE_BITS = %d, CRC_BE BITS = %d\n",
 		 CRC_LE_BITS, CRC_BE_BITS);
