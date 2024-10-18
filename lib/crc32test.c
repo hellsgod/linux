@@ -817,6 +817,19 @@ static int __init crc32_combine_test(void)
 	return 0;
 }
 
+static void crc32test_regenerate(void)
+{
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(test); i++) {
+		pr_info("{0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x, 0x%08x},\n",
+			test[i].crc, test[i].start, test[i].length,
+			crc32_le_base(test[i].crc, test_buf + test[i].start, test[i].length),
+			crc32_be_base(test[i].crc, test_buf + test[i].start, test[i].length),
+			__crc32c_le_base(test[i].crc, test_buf + test[i].start, test[i].length));
+	}
+}
+
 static int __init crc32test_init(void)
 {
 	crc32_test();
@@ -824,6 +837,9 @@ static int __init crc32test_init(void)
 
 	crc32_combine_test();
 	crc32c_combine_test();
+
+	if (0)
+		crc32test_regenerate();
 
 	return 0;
 }
