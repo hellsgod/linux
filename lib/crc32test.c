@@ -826,7 +826,7 @@ static void crc32test_regenerate(void)
 			test[i].crc, test[i].start, test[i].length,
 			crc32_le_base(test[i].crc, test_buf + test[i].start, test[i].length),
 			crc32_be_base(test[i].crc, test_buf + test[i].start, test[i].length),
-			__crc32c_le_base(test[i].crc, test_buf + test[i].start, test[i].length));
+			crc32c_le_base(test[i].crc, test_buf + test[i].start, test[i].length));
 	}
 }
 
