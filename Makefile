@@ -462,9 +462,29 @@ HOSTRUSTC = rustc
 HOSTPKG_CONFIG	= pkg-config
 
 KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
-			 -O2 -fomit-frame-pointer -std=gnu11
+			 -O3 -fomit-frame-pointer -std=gnu11
 KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
-KBUILD_USERLDFLAGS := $(USERLDFLAGS)
+KBUILD_USERLDFLAGS := \
+  -lto-CGO3 -lto-O3 -Wl,-O3 \
+  -Wl,--gc-sections -Wl,--no-undefined -Wl,--as-needed \
+  -Wl,-z,now -Wl,--relro -Wl,--relax \
+  -Wl,--icf=safe -Wl,--emit-relocs \
+  -Wl,--compress-debug-sections=zstd \
+  -Wl,--exclude-libs,ALL -Wl,--strip-debug \
+  -plugin-opt=inline-threshold=350 \
+  -plugin-opt=inlinehint-threshold=150 \
+  -plugin-opt=inlinecold-threshold=100 \
+  -plugin-opt=unroll-threshold=50 \
+  -plugin-opt=unroll-max-count=8 \
+  -plugin-opt=unroll-max-iteration-count-to-analyze=32 \
+  -plugin-opt=unroll-allow-partial \
+  -plugin-opt=unroll-partial-threshold=200 \
+  -plugin-opt=slp-threshold=8 \
+  -plugin-opt=slp-vectorize-hor-store \
+  -plugin-opt=thinlto-assume-merged \
+  -plugin-opt=codegen-data-thinlto-two-rounds \
+  -plugin-opt=enable-chr=true \
+  -plugin-opt=cost-kind=latency $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -491,7 +511,7 @@ export rust_common_flags := --edition=2021 \
 
 KBUILD_HOSTCFLAGS   := $(KBUILD_USERHOSTCFLAGS) $(HOST_LFS_CFLAGS) \
 		       $(HOSTCFLAGS) -I $(srctree)/scripts/include
-KBUILD_HOSTCXXFLAGS := -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS) \
+KBUILD_HOSTCXXFLAGS := -Wall -O3 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS) \
 		       -I $(srctree)/scripts/include
 KBUILD_HOSTRUSTFLAGS := $(rust_common_flags) -O -Cstrip=debuginfo \
 			-Zallow-features= $(HOSTRUSTFLAGS)
@@ -575,7 +595,62 @@ LINUXINCLUDE    := \
 
 KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
 
-KBUILD_CFLAGS :=
+KBUILD_CFLAGS := \
+  -mllvm -enable-gvn-hoist \
+  -mllvm -vectorize-slp \
+  -mllvm -vectorize-loops \
+  -mllvm -enable-loop-distribute \
+  -mllvm -enable-memcpy-dag-opt \
+  -mllvm -enable-pre \
+  -mllvm -enable-load-pre \
+  -mllvm -allow-unroll-and-jam \
+  -mllvm -enable-misched \
+  -mllvm -enable-gvn-memdep \
+  -mllvm -enable-loop-flatten \
+  -mllvm -enable-aa-sched-mi \
+  -mllvm -enable-merge-functions \
+  -mllvm -simplifycfg-sink-common \
+  -mllvm -enable-nontrivial-unswitch \
+  -mllvm -hot-cold-static-analysis \
+  -mllvm -memdep-block-scan-limit=32 \
+  -mllvm -attributor-max-iterations=3 \
+  -mllvm -simplifycfg-merge-cond-stores \
+  -mllvm -simplifycfg-hoist-common \
+  -mllvm -hoist-common-insts \
+  -mllvm -branch-fold-placement \
+  -mllvm -mergefunc-preserve-debug-info \
+  -mllvm -adce-remove-loops \
+  -mllvm -mergefunc-use-aliases \
+  -mllvm -interleave-loops \
+  -mllvm -enable-interleaved-mem-accesses \
+  -mllvm -enable-masked-interleaved-mem-accesses \
+  -mllvm -enable-load-in-loop-pre \
+  -mllvm -enable-loop-simplifycfg-term-folding \
+  -mllvm -enable-split-backedge-in-load-pre \
+  -mllvm -instcombine-code-sinking \
+  -mllvm -enable-lto-internalization \
+  -mllvm -enable-chr \
+  -mllvm -early-live-intervals \
+  -mllvm -enable-andcmp-sinking \
+  -mllvm -hoist-const-loads \
+  -mllvm -hoist-const-stores \
+  -mllvm -enable-post-misched \
+  -mllvm -enable-early-exit-vectorization \
+  -mllvm -enable-dse-initializes-attr-improvement \
+  -mllvm -enable-gvn-memoryssa \
+  -mllvm -dse-optimize-memoryssa \
+  -mllvm -dfa-early-exit-heuristic \
+  -mllvm -enable-spill-copy-elim \
+  -mllvm -enable-constraint-elimination \
+  -mllvm -enable-dse-partial-overwrite-tracking \
+  -mllvm -enable-dse-partial-store-merging \
+  -mllvm -enable-dfa-jump-thread \
+  -mllvm -aggressive-ext-opt \
+  -mllvm -aggressive-instcombine-max-scan-instrs=200 \
+  -mllvm -aggressive-machine-cse \
+  -mllvm -enable-epilogue-vectorization \
+  -mllvm -sink-insts-to-avoid-spills \
+  -mllvm -sink-freq-percent-threshold=50
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
 KBUILD_CFLAGS += -funsigned-char
@@ -859,8 +934,8 @@ endif # need-config
 KBUILD_CFLAGS	+= -fno-delete-null-pointer-checks
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-KBUILD_CFLAGS += -O2
-KBUILD_RUSTFLAGS += -Copt-level=2
+KBUILD_CFLAGS += -O3
+KBUILD_RUSTFLAGS += -Copt-level=3
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os
 KBUILD_RUSTFLAGS += -Copt-level=s
