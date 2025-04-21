@@ -488,7 +488,12 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=early-live-intervals \
   -plugin-opt=enable-chr=true \
   -plugin-opt=cost-kind=latency \
-  -plugin-opt=enable-lto-internalization $(USERLDFLAGS)
+  -plugin-opt=enable-lto-internalization \
+  -plugin-opt=adce-remove-loops \
+  -plugin-opt=dfa-early-exit-heuristic \
+  -plugin-opt=enable-epilogue-vectorization \
+  -plugin-opt=sink-insts-to-avoid-spills \
+  -plugin-opt=sink-freq-percent-threshold=50 $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -622,7 +627,6 @@ KBUILD_CFLAGS := \
   -mllvm -simplifycfg-hoist-common \
   -mllvm -branch-fold-placement \
   -mllvm -enable-dfa-jump-thread \
-  -mllvm -adce-remove-loops \
   -mllvm -mergefunc-use-aliases \
   -mllvm -interleave-loops \
   -mllvm -enable-interleaved-mem-accesses \
@@ -639,7 +643,6 @@ KBUILD_CFLAGS := \
   -mllvm -enable-dse-initializes-attr-improvement \
   -mllvm -enable-gvn-memoryssa \
   -mllvm -dse-optimize-memoryssa \
-  -mllvm -dfa-early-exit-heuristic \
   -mllvm -enable-spill-copy-elim \
   -mllvm -enable-constraint-elimination \
   -mllvm -enable-dse-partial-overwrite-tracking \
@@ -647,9 +650,6 @@ KBUILD_CFLAGS := \
   -mllvm -aggressive-ext-opt \
   -mllvm -aggressive-instcombine-max-scan-instrs=200 \
   -mllvm -aggressive-machine-cse \
-  -mllvm -enable-epilogue-vectorization \
-  -mllvm -sink-insts-to-avoid-spills \
-  -mllvm -sink-freq-percent-threshold=50
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
 KBUILD_CFLAGS += -funsigned-char
