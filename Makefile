@@ -480,8 +480,12 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=slp-vectorize-hor-store \
   -plugin-opt=thinlto-assume-merged \
   -plugin-opt=codegen-data-thinlto-two-rounds \
+  -plugin-opt=hoist-common-insts \
+  -plugin-opt=mergefunc-preserve-debug-info \
+  -plugin-opt=early-live-intervals \
   -plugin-opt=enable-chr=true \
-  -plugin-opt=cost-kind=latency $(USERLDFLAGS)
+  -plugin-opt=cost-kind=latency \
+  -plugin-opt=enable-lto-internalization $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -613,9 +617,8 @@ KBUILD_CFLAGS := \
   -mllvm -attributor-max-iterations=3 \
   -mllvm -simplifycfg-merge-cond-stores \
   -mllvm -simplifycfg-hoist-common \
-  -mllvm -hoist-common-insts \
   -mllvm -branch-fold-placement \
-  -mllvm -mergefunc-preserve-debug-info \
+  -mllvm -enable-dfa-jump-thread \
   -mllvm -adce-remove-loops \
   -mllvm -mergefunc-use-aliases \
   -mllvm -interleave-loops \
@@ -625,9 +628,6 @@ KBUILD_CFLAGS := \
   -mllvm -enable-loop-simplifycfg-term-folding \
   -mllvm -enable-split-backedge-in-load-pre \
   -mllvm -instcombine-code-sinking \
-  -mllvm -enable-lto-internalization \
-  -mllvm -enable-chr \
-  -mllvm -early-live-intervals \
   -mllvm -enable-andcmp-sinking \
   -mllvm -hoist-const-loads \
   -mllvm -hoist-const-stores \
@@ -641,7 +641,6 @@ KBUILD_CFLAGS := \
   -mllvm -enable-constraint-elimination \
   -mllvm -enable-dse-partial-overwrite-tracking \
   -mllvm -enable-dse-partial-store-merging \
-  -mllvm -enable-dfa-jump-thread \
   -mllvm -aggressive-ext-opt \
   -mllvm -aggressive-instcombine-max-scan-instrs=200 \
   -mllvm -aggressive-machine-cse \
