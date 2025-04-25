@@ -493,7 +493,18 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=dfa-early-exit-heuristic \
   -plugin-opt=enable-epilogue-vectorization \
   -plugin-opt=sink-insts-to-avoid-spills \
-  -plugin-opt=sink-freq-percent-threshold=50 $(USERLDFLAGS)
+  -plugin-opt=sink-freq-percent-threshold=50 \
+  -plugin-opt=enable-spill-copy-elim \
+  -plugin-opt=interleave-loops \
+  -plugin-opt=enable-load-in-loop-pre \
+  -plugin-opt=enable-loop-simplifycfg-term-folding \
+  -plugin-opt=enable-split-backedge-in-load-pre \
+  -plugin-opt=enable-interleaved-mem-accesses \
+  -plugin-opt=enable-masked-interleaved-mem-accesses \
+  -plugin-opt=instcombine-code-sinking \
+  -plugin-opt=enable-early-exit-vectorization \
+  -plugin-opt=enable-dse-initializes-attr-improvement \
+  -plugin-opt=enable-post-misched $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -628,28 +639,17 @@ KBUILD_CFLAGS := \
   -mllvm -branch-fold-placement \
   -mllvm -enable-dfa-jump-thread \
   -mllvm -mergefunc-use-aliases \
-  -mllvm -interleave-loops \
-  -mllvm -enable-interleaved-mem-accesses \
-  -mllvm -enable-masked-interleaved-mem-accesses \
-  -mllvm -enable-load-in-loop-pre \
-  -mllvm -enable-loop-simplifycfg-term-folding \
-  -mllvm -enable-split-backedge-in-load-pre \
-  -mllvm -instcombine-code-sinking \
   -mllvm -enable-andcmp-sinking \
   -mllvm -hoist-const-loads \
   -mllvm -hoist-const-stores \
-  -mllvm -enable-post-misched \
-  -mllvm -enable-early-exit-vectorization \
-  -mllvm -enable-dse-initializes-attr-improvement \
   -mllvm -enable-gvn-memoryssa \
   -mllvm -dse-optimize-memoryssa \
-  -mllvm -enable-spill-copy-elim \
   -mllvm -enable-constraint-elimination \
   -mllvm -enable-dse-partial-overwrite-tracking \
   -mllvm -enable-dse-partial-store-merging \
   -mllvm -aggressive-ext-opt \
   -mllvm -aggressive-instcombine-max-scan-instrs=200 \
-  -mllvm -aggressive-machine-cse \
+  -mllvm -aggressive-machine-cse
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
 KBUILD_CFLAGS += -funsigned-char
