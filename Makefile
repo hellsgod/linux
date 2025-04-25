@@ -501,7 +501,10 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=instcombine-code-sinking \
   -plugin-opt=enable-early-exit-vectorization \
   -plugin-opt=enable-dse-initializes-attr-improvement \
-  -plugin-opt=enable-post-misched $(USERLDFLAGS)
+  -plugin-opt=enable-post-misched \
+  -plugin-opt=x86-pad-for-align \
+  -plugin-opt=prefetch-distance=16 \
+  -plugin-opt=unroll-and-jam-threshold=50 $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -613,6 +616,8 @@ LINUXINCLUDE    := \
 KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
 
 KBUILD_CFLAGS := \
+  -fdata-sections \
+  -ffunction-sections \
   -mllvm -enable-gvn-hoist \
   -mllvm -vectorize-slp \
   -mllvm -vectorize-loops \
@@ -646,7 +651,12 @@ KBUILD_CFLAGS := \
   -mllvm -enable-dse-partial-store-merging \
   -mllvm -aggressive-ext-opt \
   -mllvm -aggressive-instcombine-max-scan-instrs=200 \
-  -mllvm -aggressive-machine-cse
+  -mllvm -aggressive-machine-cse \
+  -mllvm -unswitch-threshold=50 \
+  -mllvm -max-speculation-depth=10 \
+  -mllvm -enable-partial-inlining \
+  -mllvm -branch-hint-probability-threshold=75 \
+  -mllvm -simplifycfg-merge-compatible-invokes
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
 KBUILD_CFLAGS += -funsigned-char
