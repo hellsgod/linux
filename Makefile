@@ -468,6 +468,28 @@ KBUILD_USERLDFLAGS := \
   -Wl,--icf=safe -Wl,--emit-relocs \
   -Wl,--compress-debug-sections=zstd \
   -Wl,--exclude-libs,ALL -Wl,--strip-debug \
+  -plugin-opt=hoist-common-insts \
+  -plugin-opt=interleave-loops \
+  -plugin-opt=enable-load-in-loop-pre \
+  -plugin-opt=enable-loop-simplifycfg-term-folding \
+  -plugin-opt=enable-split-backedge-in-load-pre \
+  -plugin-opt=enable-memcpy-dag-opt \
+  -plugin-opt=enable-spill-copy-elim \
+  -plugin-opt=instcombine-code-sinking \
+  -plugin-opt=sink-insts-to-avoid-spills \
+  -plugin-opt=sink-freq-percent-threshold=50 \
+  -plugin-opt=enable-interleaved-mem-accesses \
+  -plugin-opt=enable-masked-interleaved-mem-accesses \
+  -plugin-opt=enable-epilogue-vectorization \
+  -plugin-opt=enable-early-exit-vectorization \
+  -plugin-opt=enable-dse-initializes-attr-improvement \
+  -plugin-opt=enable-dse-partial-store-merging \
+  -plugin-opt=adce-remove-loops \
+  -plugin-opt=early-live-intervals \
+  -plugin-opt=enable-post-misched \
+  -plugin-opt=thinlto-assume-merged \
+  -plugin-opt=codegen-data-thinlto-two-rounds \
+  -plugin-opt=enable-global-analyses \
   -plugin-opt=inline-threshold=350 \
   -plugin-opt=inlinehint-threshold=150 \
   -plugin-opt=inlinecold-threshold=100 \
@@ -478,37 +500,23 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=unroll-partial-threshold=200 \
   -plugin-opt=slp-threshold=8 \
   -plugin-opt=slp-vectorize-hor-store \
-  -plugin-opt=thinlto-assume-merged \
-  -plugin-opt=codegen-data-thinlto-two-rounds \
-  -plugin-opt=hoist-common-insts \
-  -plugin-opt=mergefunc-preserve-debug-info \
-  -plugin-opt=early-live-intervals \
-  -plugin-opt=enable-chr=true \
-  -plugin-opt=cost-kind=latency \
-  -plugin-opt=enable-lto-internalization \
-  -plugin-opt=adce-remove-loops \
-  -plugin-opt=dfa-early-exit-heuristic \
-  -plugin-opt=enable-epilogue-vectorization \
-  -plugin-opt=sink-insts-to-avoid-spills \
-  -plugin-opt=sink-freq-percent-threshold=50 \
-  -plugin-opt=enable-spill-copy-elim \
-  -plugin-opt=interleave-loops \
-  -plugin-opt=enable-load-in-loop-pre \
-  -plugin-opt=enable-loop-simplifycfg-term-folding \
-  -plugin-opt=enable-split-backedge-in-load-pre \
-  -plugin-opt=enable-interleaved-mem-accesses \
-  -plugin-opt=enable-masked-interleaved-mem-accesses \
-  -plugin-opt=instcombine-code-sinking \
-  -plugin-opt=enable-early-exit-vectorization \
-  -plugin-opt=enable-dse-initializes-attr-improvement \
-  -plugin-opt=enable-post-misched \
   -plugin-opt=x86-pad-for-align \
   -plugin-opt=hot-cold-static-analysis \
   -plugin-opt=basic-block-sections=labels \
   -plugin-opt=unique-basic-block-section-names \
   -plugin-opt=hot-cold-split=true \
+  -plugin-opt=branch-hint-probability-threshold=75 \
+  -plugin-opt=enable-branch-hint \
+  -plugin-opt=enable-cold-section \
+  -plugin-opt=hotcoldsplit-threshold=30 \
   -plugin-opt=prefetch-distance=16 \
-  -plugin-opt=unroll-and-jam-threshold=50 $(USERLDFLAGS)
+  -plugin-opt=unroll-and-jam-threshold=50 \
+  -plugin-opt=mergefunc-preserve-debug-info \
+  -plugin-opt=enable-merge-functions \
+  -plugin-opt=enable-lto-internalization \
+  -plugin-opt=cost-kind=latency \
+  -plugin-opt=enable-chr=true \
+  -plugin-opt=dfa-early-exit-heuristic $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -626,7 +634,6 @@ KBUILD_CFLAGS := \
   -mllvm -vectorize-slp \
   -mllvm -vectorize-loops \
   -mllvm -enable-loop-distribute \
-  -mllvm -enable-memcpy-dag-opt \
   -mllvm -enable-pre \
   -mllvm -enable-load-pre \
   -mllvm -allow-unroll-and-jam \
@@ -634,10 +641,8 @@ KBUILD_CFLAGS := \
   -mllvm -enable-gvn-memdep \
   -mllvm -enable-loop-flatten \
   -mllvm -enable-aa-sched-mi \
-  -mllvm -enable-merge-functions \
   -mllvm -simplifycfg-sink-common \
   -mllvm -enable-nontrivial-unswitch \
-  -mllvm -hot-cold-static-analysis \
   -mllvm -memdep-block-scan-limit=32 \
   -mllvm -attributor-max-iterations=3 \
   -mllvm -simplifycfg-merge-cond-stores \
@@ -659,7 +664,6 @@ KBUILD_CFLAGS := \
   -mllvm -unswitch-threshold=50 \
   -mllvm -max-speculation-depth=10 \
   -mllvm -enable-partial-inlining \
-  -mllvm -branch-hint-probability-threshold=75 \
   -mllvm -simplifycfg-merge-compatible-invokes
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
