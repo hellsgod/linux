@@ -504,6 +504,8 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=slp-threshold=8 \
   -plugin-opt=slp-vectorize-hor-store \
   -plugin-opt=x86-pad-for-align \
+  -plugin-opt=x86-pad-for-branch-align \
+  -plugin-opt=x86-pad-max-prefix-size=8 \
   -plugin-opt=hot-cold-static-analysis \
   -plugin-opt=basic-block-sections=labels \
   -plugin-opt=unique-basic-block-section-names \
