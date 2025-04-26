@@ -518,7 +518,9 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-branch-hint \
   -plugin-opt=hints-allow-reordering \
   -plugin-opt=ifcvt-branch-fold \
+  -plugin-opt=ifcvt-limit=0 \
   -plugin-opt=x86-cmov-converter \
+  -plugin-opt=x86-cmov-converter-threshold=1 \
   -plugin-opt=x86-early-ifcvt \
   -plugin-opt=enable-cold-section \
   -plugin-opt=hotcoldsplit-threshold=30 \
