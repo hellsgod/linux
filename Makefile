@@ -474,8 +474,8 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-loop-simplifycfg-term-folding \
   -plugin-opt=enable-split-backedge-in-load-pre \
   -plugin-opt=enable-memcpy-dag-opt \
-  -plugin-opt=enable-spill-copy-elim \
   -plugin-opt=enable-gvn-sink \
+  -plugin-opt=enable-spill-copy-elim \
   -plugin-opt=instcombine-code-sinking \
   -plugin-opt=sink-insts-to-avoid-spills \
   -plugin-opt=sink-freq-percent-threshold=50 \
@@ -488,9 +488,15 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=adce-remove-loops \
   -plugin-opt=early-live-intervals \
   -plugin-opt=enable-post-misched \
+  -plugin-opt=misched-cluster \
+  -plugin-opt=misched-cyclicpath \
+  -plugin-opt=misched-dcpl \
+  -plugin-opt=misched-fusion \
+  -plugin-opt=misched-regpressure \
   -plugin-opt=thinlto-assume-merged \
   -plugin-opt=codegen-data-thinlto-two-rounds \
   -plugin-opt=enable-global-analyses \
+  -plugin-opt=icp-lto \
   -plugin-opt=inline-threshold=350 \
   -plugin-opt=inlinehint-threshold=150 \
   -plugin-opt=inlinecold-threshold=100 \
@@ -510,6 +516,10 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=hot-cold-split=true \
   -plugin-opt=branch-hint-probability-threshold=75 \
   -plugin-opt=enable-branch-hint \
+  -plugin-opt=hints-allow-reordering \
+  -plugin-opt=ifcvt-branch-fold \
+  -plugin-opt=x86-cmov-converter \
+  -plugin-opt=x86-early-ifcvt \
   -plugin-opt=enable-cold-section \
   -plugin-opt=hotcoldsplit-threshold=30 \
   -plugin-opt=cold-branch-ratio=2 \
@@ -517,6 +527,7 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=cold-operand-threshold=2 \
   -plugin-opt=prefetch-distance=16 \
   -plugin-opt=unroll-and-jam-threshold=50 \
+  -plugin-opt=x86-machine-combiner \
   -plugin-opt=mergefunc-preserve-debug-info \
   -plugin-opt=enable-merge-functions \
   -plugin-opt=enable-lto-internalization \
