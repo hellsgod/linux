@@ -506,6 +506,10 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-dse-initializes-attr-improvement \
   -plugin-opt=enable-post-misched \
   -plugin-opt=x86-pad-for-align \
+  -plugin-opt=hot-cold-static-analysis \
+  -plugin-opt=basic-block-sections=labels \
+  -plugin-opt=unique-basic-block-section-names \
+  -plugin-opt=hot-cold-split=true \
   -plugin-opt=prefetch-distance=16 \
   -plugin-opt=unroll-and-jam-threshold=50 $(USERLDFLAGS)
 
