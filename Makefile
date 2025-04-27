@@ -472,6 +472,9 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=interleave-loops \
   -plugin-opt=enable-load-in-loop-pre \
   -plugin-opt=enable-loop-simplifycfg-term-folding \
+  -plugin-opt=select-opti-loop-cycle-gain-threshold=5 \
+  -plugin-opt=select-opti-loop-gradient-gain-threshold=2 \
+  -plugin-opt=select-opti-loop-relative-gain-threshold=2 \
   -plugin-opt=enable-split-backedge-in-load-pre \
   -plugin-opt=enable-memcpy-dag-opt \
   -plugin-opt=enable-gvn-sink \
@@ -487,25 +490,37 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-dse-partial-store-merging \
   -plugin-opt=adce-remove-loops \
   -plugin-opt=early-live-intervals \
+  -plugin-opt=max-phi-entries-increase-after-removing-empty-block=12 \
   -plugin-opt=enable-post-misched \
   -plugin-opt=misched-cluster \
   -plugin-opt=misched-cyclicpath \
   -plugin-opt=misched-dcpl \
   -plugin-opt=misched-fusion \
   -plugin-opt=misched-regpressure \
+  -plugin-opt=sched-avg-ipc=6 \
+  -plugin-opt=sched-high-latency-cycles=10 \
+  -plugin-opt=sched-model-force-enable-intervals \
+  -plugin-opt=scheditins=1 \
+  -plugin-opt=schedmodel=1 \
+  -plugin-opt=max-sched-reorder=48 \
   -plugin-opt=thinlto-assume-merged \
   -plugin-opt=codegen-data-thinlto-two-rounds \
   -plugin-opt=enable-global-analyses \
+  -plugin-opt=enable-vfe \
   -plugin-opt=icp-lto \
   -plugin-opt=inline-threshold=350 \
   -plugin-opt=inlinehint-threshold=150 \
   -plugin-opt=inlinecold-threshold=100 \
+  -plugin-opt=max-num-inline-blocks=12 \
+  -plugin-opt=max-partial-inlining=6 \
   -plugin-opt=unroll-threshold=50 \
   -plugin-opt=unroll-max-count=8 \
   -plugin-opt=unroll-max-iteration-count-to-analyze=32 \
   -plugin-opt=unroll-allow-partial \
   -plugin-opt=unroll-partial-threshold=200 \
   -plugin-opt=slp-threshold=8 \
+  -plugin-opt=slp-schedule-budget=32 \
+  -plugin-opt=slp-split-alternate-instructions \
   -plugin-opt=slp-vectorize-hor-store \
   -plugin-opt=x86-pad-for-align \
   -plugin-opt=x86-pad-for-branch-align \
@@ -514,6 +529,32 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=basic-block-sections=labels \
   -plugin-opt=unique-basic-block-section-names \
   -plugin-opt=hot-cold-split=true \
+  -plugin-opt=use-mbpi \
+  -plugin-opt=enable-ext-tsp-block-placement \
+  -plugin-opt=ext-tsp-apply-without-profile \
+  -plugin-opt=ext-tsp-block-placement-max-blocks=256 \
+  -plugin-opt=enable-if-conversion \
+  -plugin-opt=enable-ipra \
+  -plugin-opt=enable-machine-outliner \
+  -plugin-opt=regalloc=pbqp \
+  -plugin-opt=split-spill-mode=speed \
+  -plugin-opt=split-threshold-for-reg-with-hint=32 \
+  -plugin-opt=regalloc-csr-first-time-cost=20 \
+  -plugin-opt=regalloc-enable-advisor=default \
+  -plugin-opt=regalloc-enable-priority-advisor=default \
+  -plugin-opt=regalloc-eviction-max-interference-cutoff=50 \
+  -plugin-opt=regalloc-npm=pbqp \
+  -plugin-opt=pre-RA-sched=list-hybrid \
+  -plugin-opt=machine-sink-bfi \
+  -plugin-opt=machine-sink-cycle-limit=1 \
+  -plugin-opt=optimize-regalloc \
+  -plugin-opt=post-RA-scheduler \
+  -plugin-opt=max-jump-table-size=32 \
+  -plugin-opt=machine-sink-load-blocks-threshold=8 \
+  -plugin-opt=machine-sink-load-instrs-threshold=4 \
+  -plugin-opt=machine-sink-split \
+  -plugin-opt=machine-sink-split-probability-threshold=30 \
+  -plugin-opt=max-uses-for-sinking=6 \
   -plugin-opt=branch-hint-probability-threshold=75 \
   -plugin-opt=enable-branch-hint \
   -plugin-opt=hints-allow-reordering \
@@ -524,16 +565,22 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=x86-early-ifcvt \
   -plugin-opt=enable-cold-section \
   -plugin-opt=hotcoldsplit-threshold=30 \
+  -plugin-opt=max-switch-cases-per-result=12 \
   -plugin-opt=cold-branch-ratio=2 \
   -plugin-opt=cold-operand-max-cost-multiplier=4 \
   -plugin-opt=cold-operand-threshold=2 \
   -plugin-opt=prefetch-distance=16 \
+  -plugin-opt=loop-prefetch-writes \
+  -plugin-opt=max-prefetch-iters-ahead=8 \
+  -plugin-opt=loop-to-cold-block-ratio=8 \
   -plugin-opt=unroll-and-jam-threshold=50 \
   -plugin-opt=x86-machine-combiner \
   -plugin-opt=mergefunc-preserve-debug-info \
+  -plugin-opt=pick-merged-source-locations \
   -plugin-opt=enable-merge-functions \
   -plugin-opt=enable-lto-internalization \
   -plugin-opt=cost-kind=latency \
+  -plugin-opt=relocation-model=static \
   -plugin-opt=enable-chr=true \
   -plugin-opt=dfa-early-exit-heuristic $(USERLDFLAGS)
 
@@ -655,6 +702,24 @@ KBUILD_CFLAGS := \
   -mllvm -enable-loop-distribute \
   -mllvm -enable-pre \
   -mllvm -enable-load-pre \
+  -mllvm -mandatory-inlining-first \
+  -mllvm -preserve-alignment-assumptions-during-inlining \
+  -mllvm -enable-detailed-function-properties \
+  -mllvm -enable-knowledge-retention \
+  -mllvm -basic-aa-recphi \
+  -mllvm -basic-aa-separate-storage \
+  -mllvm -cgp-optimize-phi-types \
+  -mllvm -cgp-split-large-offset-gep \
+  -mllvm -cgp-type-promotion-merge \
+  -mllvm -combiner-global-alias-analysis \
+  -mllvm -combiner-reduce-load-op-store-width \
+  -mllvm -combiner-reduce-load-op-store-width-force-narrowing-profitable \
+  -mllvm -combiner-shrink-load-replace-store-with-store \
+  -mllvm -combiner-split-load-index \
+  -mllvm -combiner-store-merging \
+  -mllvm -combiner-store-merge-dependence-limit=7 \
+  -mllvm -combiner-tokenfactor-inline-limit=128 \
+  -mllvm -combiner-use-tbaa \
   -mllvm -allow-unroll-and-jam \
   -mllvm -enable-misched \
   -mllvm -enable-gvn-memdep \
@@ -665,7 +730,12 @@ KBUILD_CFLAGS := \
   -mllvm -memdep-block-scan-limit=32 \
   -mllvm -attributor-max-iterations=3 \
   -mllvm -simplifycfg-merge-cond-stores \
+  -mllvm -simplifycfg-hoist-cond-stores \
+  -mllvm -simplifycfg-hoist-loads-with-cond-faulting \
+  -mllvm -simplifycfg-hoist-stores-with-cond-faulting \
   -mllvm -simplifycfg-hoist-common \
+  -mllvm -simplifycfg-hoist-common-skip-limit=3 \
+  -mllvm -simplifycfg-max-small-block-size=3 \
   -mllvm -branch-fold-placement \
   -mllvm -enable-dfa-jump-thread \
   -mllvm -mergefunc-use-aliases \
