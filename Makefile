@@ -475,12 +475,23 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=interleave-loops \
   -plugin-opt=enable-load-in-loop-pre \
   -plugin-opt=enable-loop-simplifycfg-term-folding \
+  -plugin-opt=addr-sink-combine-base-gv \
+  -plugin-opt=addr-sink-combine-base-offs \
+  -plugin-opt=addr-sink-combine-base-reg \
+  -plugin-opt=addr-sink-combine-scaled-reg \
+  -plugin-opt=addr-sink-new-phis \
+  -plugin-opt=addr-sink-new-select \
+  -plugin-opt=addr-sink-using-gep \
   -plugin-opt=select-opti-loop-cycle-gain-threshold=5 \
   -plugin-opt=select-opti-loop-gradient-gain-threshold=2 \
   -plugin-opt=select-opti-loop-relative-gain-threshold=2 \
   -plugin-opt=enable-split-backedge-in-load-pre \
   -plugin-opt=enable-memcpy-dag-opt \
+  -plugin-opt=do-counter-promotion \
+  -plugin-opt=hoist-runtime-checks \
   -plugin-opt=enable-gvn-sink \
+  -plugin-opt=enable-newgvn \
+  -plugin-opt=gvn-add-phi-translation \
   -plugin-opt=enable-spill-copy-elim \
   -plugin-opt=instcombine-code-sinking \
   -plugin-opt=sink-insts-to-avoid-spills \
@@ -492,6 +503,7 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-dse-initializes-attr-improvement \
   -plugin-opt=enable-dse-partial-store-merging \
   -plugin-opt=adce-remove-loops \
+  -plugin-opt=licm-control-flow-hoisting \
   -plugin-opt=early-live-intervals \
   -plugin-opt=max-phi-entries-increase-after-removing-empty-block=12 \
   -plugin-opt=enable-post-misched \
@@ -525,6 +537,7 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=slp-schedule-budget=32 \
   -plugin-opt=slp-split-alternate-instructions \
   -plugin-opt=slp-vectorize-hor-store \
+  -plugin-opt=extra-vectorizer-passes \
   -plugin-opt=x86-pad-for-align \
   -plugin-opt=x86-pad-for-branch-align \
   -plugin-opt=x86-pad-max-prefix-size=8 \
