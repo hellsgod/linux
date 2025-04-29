@@ -544,8 +544,6 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=slp-threshold=8 \
   -plugin-opt=slp-schedule-budget=32 \
   -plugin-opt=slp-split-alternate-instructions \
-  -plugin-opt=slp-vectorize-hor \
-  -plugin-opt=slp-vectorize-hor-store \
   -plugin-opt=extra-vectorizer-passes \
   -plugin-opt=x86-pad-for-align \
   -plugin-opt=x86-pad-for-branch-align \
@@ -730,6 +728,8 @@ KBUILD_CFLAGS := \
   -mllvm -enable-gvn-hoist \
   -mllvm -vectorize-slp \
   -mllvm -slp-revec \
+  -mllvm -slp-vectorize-hor \
+  -mllvm -slp-vectorize-hor-store \
   -mllvm -vectorize-loops \
   -mllvm -enable-loop-distribute \
   -mllvm -loop-rotate-multi \
