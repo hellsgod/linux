@@ -528,14 +528,23 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=inlinecold-threshold=100 \
   -plugin-opt=max-num-inline-blocks=12 \
   -plugin-opt=max-partial-inlining=6 \
+  -plugin-opt=inline-deferral \
+  -plugin-opt=inline-deferral-scale=4 \
+  -plugin-opt=inline-priority-mode=cost-benefit \
+  -plugin-opt=inline-savings-multiplier=2 \
+  -plugin-opt=inline-savings-profitable-multiplier=3 \
+  -plugin-opt=inline-size-allowance=24 \
   -plugin-opt=unroll-threshold=50 \
   -plugin-opt=unroll-max-count=8 \
   -plugin-opt=unroll-max-iteration-count-to-analyze=32 \
   -plugin-opt=unroll-allow-partial \
   -plugin-opt=unroll-partial-threshold=200 \
+  -plugin-opt=ddg-pi-blocks \
+  -plugin-opt=ddg-simplify \
   -plugin-opt=slp-threshold=8 \
   -plugin-opt=slp-schedule-budget=32 \
   -plugin-opt=slp-split-alternate-instructions \
+  -plugin-opt=slp-vectorize-hor \
   -plugin-opt=slp-vectorize-hor-store \
   -plugin-opt=extra-vectorizer-passes \
   -plugin-opt=x86-pad-for-align \
@@ -554,6 +563,7 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-ipra \
   -plugin-opt=enable-machine-outliner \
   -plugin-opt=regalloc=pbqp \
+  -plugin-opt=pre-RA-sched=list-hybrid \
   -plugin-opt=split-spill-mode=speed \
   -plugin-opt=split-threshold-for-reg-with-hint=32 \
   -plugin-opt=regalloc-csr-first-time-cost=20 \
@@ -582,6 +592,7 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=x86-early-ifcvt \
   -plugin-opt=enable-cold-section \
   -plugin-opt=hotcoldsplit-threshold=30 \
+  -plugin-opt=loop-to-cold-block-ratio=8 \
   -plugin-opt=max-switch-cases-per-result=12 \
   -plugin-opt=cold-branch-ratio=2 \
   -plugin-opt=cold-operand-max-cost-multiplier=4 \
@@ -590,13 +601,16 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=loop-prefetch-writes \
   -plugin-opt=max-prefetch-iters-ahead=8 \
   -plugin-opt=loop-to-cold-block-ratio=8 \
+  -plugin-opt=lower-allow-check-percentile-cutoff-hot=90 \
   -plugin-opt=unroll-and-jam-threshold=50 \
   -plugin-opt=x86-machine-combiner \
+  -plugin-opt=mul-constant-optimization \
   -plugin-opt=mergefunc-preserve-debug-info \
   -plugin-opt=pick-merged-source-locations \
   -plugin-opt=enable-merge-functions \
   -plugin-opt=enable-lto-internalization \
   -plugin-opt=cost-kind=latency \
+  -plugin-opt=costmodel-reduxcost \
   -plugin-opt=relocation-model=static \
   -plugin-opt=enable-chr=true \
   -plugin-opt=dfa-early-exit-heuristic $(USERLDFLAGS)
@@ -715,8 +729,11 @@ KBUILD_CFLAGS := \
   -ffunction-sections \
   -mllvm -enable-gvn-hoist \
   -mllvm -vectorize-slp \
+  -mllvm -slp-revec \
   -mllvm -vectorize-loops \
   -mllvm -enable-loop-distribute \
+  -mllvm -loop-rotate-multi \
+  -mllvm -enable-loop-flatten \
   -mllvm -enable-pre \
   -mllvm -enable-load-pre \
   -mllvm -mandatory-inlining-first \
@@ -740,9 +757,9 @@ KBUILD_CFLAGS := \
   -mllvm -allow-unroll-and-jam \
   -mllvm -enable-misched \
   -mllvm -enable-gvn-memdep \
-  -mllvm -enable-loop-flatten \
   -mllvm -enable-aa-sched-mi \
   -mllvm -simplifycfg-sink-common \
+  -mllvm -phi-elim-split-all-critical-edges \
   -mllvm -enable-nontrivial-unswitch \
   -mllvm -memdep-block-scan-limit=32 \
   -mllvm -attributor-max-iterations=3 \
@@ -754,6 +771,7 @@ KBUILD_CFLAGS := \
   -mllvm -simplifycfg-hoist-common-skip-limit=3 \
   -mllvm -simplifycfg-max-small-block-size=3 \
   -mllvm -branch-fold-placement \
+  -mllvm -forward-switch-cond \
   -mllvm -enable-dfa-jump-thread \
   -mllvm -mergefunc-use-aliases \
   -mllvm -enable-andcmp-sinking \
