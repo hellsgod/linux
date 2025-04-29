@@ -546,6 +546,7 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=unique-basic-block-section-names \
   -plugin-opt=hot-cold-split=true \
   -plugin-opt=use-mbpi \
+  -plugin-opt=optimize-existing-hot-cold-new \
   -plugin-opt=enable-ext-tsp-block-placement \
   -plugin-opt=ext-tsp-apply-without-profile \
   -plugin-opt=ext-tsp-block-placement-max-blocks=256 \
