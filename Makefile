@@ -726,6 +726,9 @@ KBUILD_CFLAGS := \
   -Wno-default-const-init-unsafe \
   -fdata-sections \
   -ffunction-sections \
+  -ffine-grained-bitfield-accesses \
+  -fmerge-functions \
+  -fmerge-all-constants \
   -mllvm -enable-gvn-hoist \
   -mllvm -vectorize-slp \
   -mllvm -slp-revec \
