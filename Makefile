@@ -487,6 +487,15 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=select-opti-loop-relative-gain-threshold=2 \
   -plugin-opt=enable-split-backedge-in-load-pre \
   -plugin-opt=enable-memcpy-dag-opt \
+  -plugin-opt=expand-memcmp \
+  -plugin-opt=interleaved-access \
+  -plugin-opt=interleaved-load-combine \
+  -plugin-opt=div-rem-pairs \
+  -plugin-opt=expand-large-div-rem \
+  -plugin-opt=infer-address-spaces \
+  -plugin-opt=typepromotion \
+  -plugin-opt=partially-inline-libcalls \
+  -plugin-opt=nary-reassociate \
   -plugin-opt=enable-loop-versioning-licm \
   -plugin-opt=enable-histogram-loop-vectorization \
   -plugin-opt=enable-tbaa \
