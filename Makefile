@@ -487,6 +487,14 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=select-opti-loop-relative-gain-threshold=2 \
   -plugin-opt=enable-split-backedge-in-load-pre \
   -plugin-opt=enable-memcpy-dag-opt \
+  -plugin-opt=enable-loop-versioning-licm \
+  -plugin-opt=enable-histogram-loop-vectorization \
+  -plugin-opt=enable-tbaa \
+  -plugin-opt=enable-local-reassign \
+  -plugin-opt=enable-shrink-wrap \
+  -plugin-opt=enable-shrink-wrap-region-split \
+  -plugin-opt=enable-loadstore-runtime-interleave \
+  -plugin-opt=enable-heap-to-stack-conversion \
   -plugin-opt=do-counter-promotion \
   -plugin-opt=hoist-runtime-checks \
   -plugin-opt=enable-gvn-sink \
@@ -740,6 +748,7 @@ KBUILD_CFLAGS := \
   -mllvm -enable-loop-flatten \
   -mllvm -enable-pre \
   -mllvm -enable-load-pre \
+  -mllvm -enable-mem-access-versioning \
   -mllvm -mandatory-inlining-first \
   -mllvm -preserve-alignment-assumptions-during-inlining \
   -mllvm -enable-detailed-function-properties \
