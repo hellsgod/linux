@@ -554,6 +554,28 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=thinlto-split-lto-unit \
   -plugin-opt=thinlto-invalidate-all-analyses \
   -plugin-opt=codegen-data-thinlto-two-rounds \
+  -plugin-opt=partial-inliner \
+  -plugin-opt=mergefunc \
+  -plugin-opt=globalsplit \
+  -plugin-opt=globalopt \
+  -plugin-opt=global-merge-func \
+  -plugin-opt=function-import \
+  -plugin-opt=deadargelim \
+  -plugin-opt=rpo-function-attrs \
+  -plugin-opt=called-value-propagation \
+  -plugin-opt=globals-aa \
+  -plugin-opt=recompute-globalsaa \
+  -plugin-opt=tail-dup-placement \
+  -plugin-opt=tail-dup-placement-aggressive-threshold=24 \
+  -plugin-opt=tail-merge-size=3 \
+  -plugin-opt=tail-merge-threshold=8 \
+  -plugin-opt=temporal-reuse-threshold=12 \
+  -plugin-opt=terminal-rule \
+  -plugin-opt=canonicalize-aliases \
+  -plugin-opt=elim-avail-extern \
+  -plugin-opt=inferattrs \
+  -plugin-opt=constmerge \
+  -plugin-opt=lowertypetests \
   -plugin-opt=enable-global-analyses \
   -plugin-opt=enable-vfe \
   -plugin-opt=icp-lto \
