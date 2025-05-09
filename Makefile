@@ -569,6 +569,10 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=tail-dup-placement-aggressive-threshold=24 \
   -plugin-opt=tail-merge-size=3 \
   -plugin-opt=tail-merge-threshold=8 \
+  -plugin-opt=jump-inst-cost=1 \
+  -plugin-opt=jump-table-density=2 \
+  -plugin-opt=jump-table-to-switch-function-size-threshold=256 \
+  -plugin-opt=jump-table-to-switch-size-threshold=64 \
   -plugin-opt=temporal-reuse-threshold=12 \
   -plugin-opt=terminal-rule \
   -plugin-opt=canonicalize-aliases \
