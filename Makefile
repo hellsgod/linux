@@ -514,6 +514,9 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-heap-to-stack-conversion \
   -plugin-opt=enable-newgvn \
   -plugin-opt=gvn-add-phi-translation \
+  -plugin-opt=enable-gvn-sink \
+  -plugin-opt=instcombine-code-sinking \
+  -plugin-opt=sink-insts-to-avoid-spills \
   -plugin-opt=enable-dse-initializes-attr-improvement \
   -plugin-opt=enable-dse-partial-store-merging \
   -plugin-opt=adce-remove-loops \
@@ -538,8 +541,10 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=tail-dup-placement \
   -plugin-opt=tail-dup-placement-aggressive-threshold=24 \
   -plugin-opt=tail-merge-threshold=16 \
+  -plugin-opt=tail-merge-size=3 \
   -plugin-opt=slp-threshold=8 \
   -plugin-opt=slp-schedule-budget=32 \
+  -plugin-opt=slp-split-alternate-instructions \
   -plugin-opt=extra-vectorizer-passes \
   -plugin-opt=enable-vplan-native-path \
   -plugin-opt=enable-epilogue-vectorization \
@@ -556,7 +561,11 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-cold-section \
   -plugin-opt=prefetch-distance=16 \
   -plugin-opt=loop-prefetch-writes \
-  -plugin-opt=max-prefetch-iters-ahead=8 $(USERLDFLAGS)
+  -plugin-opt=max-prefetch-iters-ahead=8 \
+  -plugin-opt=hoist-common-insts \
+  -plugin-opt=enable-loop-simplifycfg-term-folding \
+  -plugin-opt=enable-split-backedge-in-load-pre \
+  -plugin-opt=enable-unswitch-cost-multiplier $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
