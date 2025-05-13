@@ -523,6 +523,9 @@ KBUILD_USERLDFLAGS := \
   -plugin-opt=enable-post-misched \
   -plugin-opt=misched-cluster \
   -plugin-opt=misched-fusion \
+  -plugin-opt=misched-cyclicpath \
+  -plugin-opt=misched-dcpl \
+  -plugin-opt=misched-regpressure \
   -plugin-opt=max-sched-reorder=48 \
   -plugin-opt=post-RA-scheduler \
   -plugin-opt=early-live-intervals \
@@ -703,6 +706,7 @@ KBUILD_CFLAGS := \
   -mllvm -simplifycfg-hoist-loads-with-cond-faulting \
   -mllvm -simplifycfg-hoist-stores-with-cond-faulting \
   -mllvm -simplifycfg-sink-common \
+  -mllvm -simplifycfg-merge-compatible-invokes \
   -mllvm -branch-fold-placement \
   -mllvm -forward-switch-cond \
   -mllvm -enable-dfa-jump-thread \
