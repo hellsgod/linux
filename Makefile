@@ -723,7 +723,9 @@ KBUILD_CFLAGS := \
   -mllvm -attributor-max-iterations=3 \
   -mllvm -unswitch-threshold=50 \
   -mllvm -max-speculation-depth=10 \
-  -mllvm -enable-nontrivial-unswitch
+  -mllvm -enable-nontrivial-unswitch \
+  -mllvm -hoist-const-loads \
+  -mllvm -hoist-const-stores
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
 KBUILD_CFLAGS += -funsigned-char
