@@ -680,7 +680,6 @@ LINUXINCLUDE    := \
 KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
 
 KBUILD_CFLAGS := \
-  -Wno-default-const-init-unsafe \
   -fdata-sections -ffunction-sections \
   -ffine-grained-bitfield-accesses \
   -fmerge-all-constants \
