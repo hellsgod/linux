@@ -464,9 +464,60 @@ KERNELDOC       = $(srctree)/scripts/kernel-doc.py
 export KERNELDOC
 
 KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
-			 -O2 -fomit-frame-pointer -std=gnu11
+			 -O3 -fomit-frame-pointer -std=gnu11
 KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
-KBUILD_USERLDFLAGS := $(USERLDFLAGS)
+KBUILD_USERLDFLAGS := \
+  -lto-CGO3 -lto-O3 -Wl,-O3 \
+  -Wl,--gc-sections -Wl,--no-undefined -Wl,--as-needed \
+  -Wl,--icf=safe \
+  -Wl,--compress-debug-sections=zstd -Wl,--exclude-libs,ALL \
+  -plugin-opt=thinlto-split-lto-unit \
+  -plugin-opt=partial-inliner \
+  -plugin-opt=mergefunc -plugin-opt=pick-merged-source-locations \
+  -plugin-opt=inline-threshold=420 \
+  -plugin-opt=inlinehint-threshold=170 \
+  -plugin-opt=inlinecold-threshold=110 \
+  -plugin-opt=inline-deferral -plugin-opt=inline-deferral-scale=4 \
+  -plugin-opt=inline-savings-multiplier=2 -plugin-opt=inline-savings-profitable-multiplier=3 \
+  -plugin-opt=inline-size-allowance=28 \
+  -plugin-opt=max-num-inline-blocks=14 -plugin-opt=max-partial-inlining=8 \
+  -plugin-opt=unroll-threshold=70 -plugin-opt=unroll-max-count=10 \
+  -plugin-opt=unroll-max-iteration-count-to-analyze=40 \
+  -plugin-opt=unroll-allow-partial -plugin-opt=unroll-partial-threshold=240 \
+  -plugin-opt=enable-unroll-and-jam -plugin-opt=unroll-and-jam-threshold=60 \
+  -plugin-opt=enable-loop-versioning-licm -plugin-opt=enable-loop-flatten \
+  -plugin-opt=enable-unswitch-cost-multiplier \
+  -plugin-opt=extra-vectorizer-passes \
+  -plugin-opt=enable-epilogue-vectorization -plugin-opt=enable-early-exit-vectorization \
+  -plugin-opt=slp-threshold=8 -plugin-opt=slp-schedule-budget=32 -plugin-opt=slp-split-alternate-instructions \
+  -plugin-opt=enable-vplan-native-path \
+  -plugin-opt=loop-vectorize-with-block-frequency \
+  -plugin-opt=vectorizer-consider-reg-pressure -plugin-opt=vectorize-memory-check-threshold=8 -plugin-opt=vectorize-num-stores-pred=2 \
+  -plugin-opt=vectorizer-min-trip-count=2 \
+  -plugin-opt=load-store-vectorizer \
+  -plugin-opt=enable-interleaved-mem-accesses \
+  -plugin-opt=enable-masked-interleaved-mem-accesses -plugin-opt=lower-interleaved-accesses \
+  -plugin-opt=gvn-add-phi-translation -plugin-opt=enable-gvn-sink -plugin-opt=enable-gvn-hoist \
+  -plugin-opt=enable-memcpy-dag-opt \
+  -plugin-opt=enable-memcpyopt-without-libcalls \
+  -plugin-opt=enable-dse-initializes-attr-improvement -plugin-opt=enable-dse-partial-store-merging \
+  -plugin-opt=instcombine-code-sinking -plugin-opt=sink-insts-to-avoid-spills \
+  -plugin-opt=adce-remove-loops -plugin-opt=adce-remove-control-flow \
+  -plugin-opt=hoist-common-insts -plugin-opt=enable-loop-simplifycfg-term-folding \
+  -plugin-opt=consthoist-with-block-frequency -plugin-opt=consthoist-gep \
+  -plugin-opt=enable-tbaa -plugin-opt=globals-aa -plugin-opt=globalopt \
+  -plugin-opt=use-noalias-intrinsic-during-inlining \
+  -plugin-opt=prefetch-distance=22 -plugin-opt=max-prefetch-iters-ahead=14 -plugin-opt=loop-prefetch-writes \
+  -plugin-opt=enable-post-misched -plugin-opt=misched-regpressure -plugin-opt=max-sched-reorder=80 \
+  -plugin-opt=enable-misched -plugin-opt=enable-aa-sched-mi \
+  -plugin-opt=enable-ext-tsp-block-placement -plugin-opt=ext-tsp-apply-without-profile -plugin-opt=ext-tsp-block-placement-max-blocks=400 \
+  -plugin-opt=post-RA-scheduler -plugin-opt=early-live-intervals -plugin-opt=optimize-regalloc \
+  -plugin-opt=enable-spill-copy-elim \
+  -plugin-opt=enable-indvars-post-increment-ranges \
+  -plugin-opt=lsr-drop-solution -plugin-opt=lsr-exp-narrow -plugin-opt=lsr-insns-cost -plugin-opt=enable-lsr-phielim \
+  -plugin-opt=loop-version-annotate-no-alias \
+  -plugin-opt=hot-cold-static-analysis \
+  -plugin-opt=enable-tail-merge $(USERLDFLAGS)
 
 # These flags apply to all Rust code in the tree, including the kernel and
 # host programs.
@@ -498,7 +549,7 @@ export rust_common_flags := --edition=2021 \
 
 KBUILD_HOSTCFLAGS   := $(KBUILD_USERHOSTCFLAGS) $(HOST_LFS_CFLAGS) \
 		       $(HOSTCFLAGS) -I $(srctree)/scripts/include
-KBUILD_HOSTCXXFLAGS := -Wall -O2 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS) \
+KBUILD_HOSTCXXFLAGS := -Wall -O3 $(HOST_LFS_CFLAGS) $(HOSTCXXFLAGS) \
 		       -I $(srctree)/scripts/include
 KBUILD_HOSTRUSTFLAGS := $(rust_common_flags) -O -Cstrip=debuginfo \
 			-Zallow-features= $(HOSTRUSTFLAGS)
@@ -583,7 +634,26 @@ LINUXINCLUDE    := \
 
 KBUILD_AFLAGS   := -D__ASSEMBLY__ -fno-PIE
 
-KBUILD_CFLAGS :=
+KBUILD_CFLAGS := \
+  -fdata-sections -ffunction-sections \
+  -ffine-grained-bitfield-accesses \
+  -mllvm -enable-pre -mllvm -enable-load-pre -mllvm -enable-load-in-loop-pre -mllvm -enable-split-backedge-in-load-pre \
+  -mllvm -basic-aa-recphi -mllvm -basic-aa-separate-storage \
+  -mllvm -enable-gvn-memoryssa \
+  -mllvm -dse-optimize-memoryssa \
+  -mllvm -enable-dse-partial-overwrite-tracking -mllvm -enable-dse-partial-store-merging \
+  -mllvm -enable-constraint-elimination \
+  -mllvm -aggressive-instcombine-max-scan-instrs=260 \
+  -mllvm -memdep-block-scan-limit=40 \
+  -mllvm -attributor-max-iterations=3 \
+  -mllvm -unswitch-threshold=64 -mllvm -enable-nontrivial-unswitch \
+  -mllvm -max-speculation-depth=12 \
+  -mllvm -simplifycfg-merge-cond-stores -mllvm -simplifycfg-hoist-common \
+  -mllvm -simplifycfg-hoist-cond-stores \
+  -mllvm -simplifycfg-hoist-loads-with-cond-faulting -mllvm -simplifycfg-hoist-stores-with-cond-faulting \
+  -mllvm -simplifycfg-sink-common \
+  -mllvm -branch-fold-placement -mllvm -forward-switch-cond \
+  -mllvm -hoist-const-loads -mllvm -hoist-const-stores
 KBUILD_CFLAGS += -std=gnu11
 KBUILD_CFLAGS += -fshort-wchar
 KBUILD_CFLAGS += -funsigned-char
@@ -867,8 +937,8 @@ endif # need-config
 KBUILD_CFLAGS	+= -fno-delete-null-pointer-checks
 
 ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-KBUILD_CFLAGS += -O2
-KBUILD_RUSTFLAGS += -Copt-level=2
+KBUILD_CFLAGS += -O3
+KBUILD_RUSTFLAGS += -Copt-level=3
 else ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS += -Os
 KBUILD_RUSTFLAGS += -Copt-level=s
