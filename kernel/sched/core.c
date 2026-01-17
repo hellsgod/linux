@@ -9141,6 +9141,7 @@ void sched_move_task(struct task_struct *tsk, bool for_autogroup)
 
 	CLASS(task_rq_lock, rq_guard)(tsk);
 	rq = rq_guard.rq;
+	update_rq_clock(rq);
 
 	scoped_guard (sched_change, tsk, queue_flags) {
 		sched_change_group(tsk, new_group);
