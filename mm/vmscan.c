@@ -216,7 +216,11 @@ static u64 workingset_protection_prev_totalram __read_mostly = 0;
 /*
  * From 0 .. MAX_SWAPPINESS.  Higher means more swappy.
  */
+#ifdef CONFIG_HELLS
+int vm_swappiness = 100;
+#else
 int vm_swappiness = 60;
+#endif
 
 #ifdef CONFIG_MEMCG
 
