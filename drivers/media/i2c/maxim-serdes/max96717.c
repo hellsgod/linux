@@ -574,7 +574,7 @@ static int max96717_conf_pin_config_get(struct pinctrl_dev *pctldev,
 	return 0;
 }
 
-static int max96717_conf_pin_config_set_one(struct max96717_priv *priv,
+static noinline int max96717_conf_pin_config_set_one(struct max96717_priv *priv,
 					    unsigned int offset,
 					    unsigned long config)
 {
